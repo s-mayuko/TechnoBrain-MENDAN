@@ -1,0 +1,99 @@
+---
+description: "GCP運用のベストプラクティスと標準コマンド"
+alwaysApply: true
+---
+
+# GCP運用ルール
+
+## プロジェクト情報
+- **プロジェクトID**: technobrain-mendan
+- **プロジェクト番号**: 251107091138
+- **デフォルトリージョン**: asia-northeast1
+- **デフォルトゾーン**: asia-northeast1-a
+
+## 必須の設定確認
+GCP関連の作業を行う前に、以下を常に確認すること：
+```bash
+gcloud config get-value project
+gcloud config get-value compute/region
+gcloud config get-value compute/zone
+```
+
+## 認証とプロジェクト設定
+```bash
+# GCP認証
+gcloud auth login
+gcloud auth application-default login
+
+# プロジェクト設定
+gcloud config set project technobrain-mendan
+gcloud config set compute/region asia-northeast1
+gcloud config set compute/zone asia-northeast1-a
+```
+
+## 有効化済みのGCP API
+- Cloud Resource Manager API
+- Cloud Build API
+- Cloud Run Admin API
+- Cloud Storage API
+- Artifact Registry API
+
+新しいAPIを有効化する場合：
+```bash
+gcloud services enable [API_NAME].googleapis.com
+```
+
+## コスト管理
+- 開発環境では最小インスタンスクラス（F1）を使用
+- 不要なリソースは即座に削除
+- 自動スケーリングの設定を適切に行う（min_idle_instances: 0）
+
+## セキュリティベストプラクティス
+- サービスアカウントキー（.json）は絶対にGitにコミットしない
+- 環境変数やSecretsを使用して機密情報を管理
+- IAMロールは最小権限の原則に従う
+- GitHub SecretsにGCP_SA_KEYを安全に保管
+
+## デプロイ前チェックリスト
+1. [ ] ローカルでテスト実行
+2. [ ] 環境変数が正しく設定されているか確認
+3. [ ] .gcloudignoreと.gitignoreが適切に設定されているか確認
+4. [ ] app.yamlまたはDockerfileが最新か確認
+5. [ ] GitHub Actionsワークフローが正しく設定されているか確認
+
+## よく使うコマンド
+```bash
+# プロジェクト情報の確認
+gcloud projects describe technobrain-mendan
+
+# 有効なAPIの一覧
+gcloud services list --enabled
+
+# App Engineへのデプロイ
+gcloud app deploy
+
+# ログの確認
+gcloud app logs tail -s default
+
+# リソースの確認
+gcloud app instances list
+gcloud app services list
+```
+
+## トラブルシューティング
+### 認証エラー
+```bash
+gcloud auth revoke
+gcloud auth login
+gcloud auth application-default login
+```
+
+### デプロイエラー
+1. API が有効化されているか確認
+2. サービスアカウントの権限を確認
+3. ログを確認してエラー詳細を把握
+
+## 参考ドキュメント
+- @gcp-setup.md - 詳細なGCP設定手順
+- @GITHUB-SECRETS-SETUP.md - GitHub Secretsの設定方法
+- @.github/workflows/gcp-deploy.yml - CI/CD設定

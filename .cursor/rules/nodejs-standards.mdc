@@ -1,0 +1,99 @@
+---
+description: "Node.jsプロジェクトの標準とベストプラクティス"
+globs:
+  - "**/*.js"
+  - "**/*.ts"
+  - "**/package.json"
+  - "**/tsconfig.json"
+alwaysApply: false
+---
+
+# Node.js 開発標準
+
+## プロジェクト設定
+- Node.js バージョン: 18 (LTS)
+- 新規ファイルは可能な限りTypeScriptを使用
+- ES Modules形式を優先
+
+## パッケージ管理
+- package.jsonには必ず以下を含める:
+  - name
+  - version
+  - description
+  - scripts（start、dev、build、test）
+  - engines（Node.jsバージョン指定）
+
+```json
+{
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+```
+
+## コーディング規約
+- セミコロンを使用
+- インデント: 2スペース
+- 改行コード: LF
+- 末尾の空白は削除
+- ファイル末尾に改行を含める
+
+## 非同期処理
+- async/awaitを優先的に使用
+- Promiseチェーンは必要な場合のみ
+- エラーハンドリングを必ず実装（try-catch）
+
+```javascript
+try {
+  const result = await someAsyncOperation();
+  return result;
+} catch (error) {
+  console.error('Operation failed:', error);
+  throw error;
+}
+```
+
+## 環境変数
+- dotenv を使用して環境変数を管理
+- .env ファイルは .gitignore に含める
+- 環境変数名は大文字のスネークケース（例: PROJECT_ID）
+
+## エラーハンドリング
+- カスタムエラークラスを使用
+- エラーメッセージは具体的に記述
+- スタックトレースを保持
+
+## ロギング
+- console.log は開発時のみ使用
+- 本番環境では適切なロギングライブラリを使用
+- ログレベルを適切に設定（error、warn、info、debug）
+
+## テスト
+- ユニットテストを記述
+- テストファイル名: `*.test.js` または `*.spec.js`
+- テストカバレッジ80%以上を目指す
+
+## セキュリティ
+- 依存関係の脆弱性を定期的にチェック（`npm audit`）
+- 機密情報をコードに含めない
+- 入力値のバリデーションを実施
+
+## GCP統合時の注意点
+- @google-cloud/* パッケージを使用
+- サービスアカウント認証を適切に設定
+- リージョン設定を環境変数で管理
+
+```javascript
+const projectId = process.env.PROJECT_ID || 'technobrain-mendan';
+const region = process.env.REGION || 'asia-northeast1';
+```
+
+## パフォーマンス
+- 不要な依存関係を避ける
+- メモリリークに注意
+- 大量データ処理時はストリーミングを検討
+
+## 参考ドキュメント
+- Node.js公式: https://nodejs.org/docs/latest-v18.x/api/
+- TypeScript公式: https://www.typescriptlang.org/docs/
+- Google Cloud Node.js Client Libraries: https://cloud.google.com/nodejs/docs/reference

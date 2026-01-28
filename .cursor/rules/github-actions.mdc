@@ -1,0 +1,78 @@
+---
+description: "GitHub ActionsとCI/CDのベストプラクティス"
+globs:
+  - "**/.github/workflows/**/*.yml"
+  - "**/.github/workflows/**/*.yaml"
+alwaysApply: false
+---
+
+# GitHub Actions / CI/CD ルール
+
+## ワークフロー設計原則
+- 各ステップは明確な単一責任を持つ
+- エラーハンドリングを適切に実装
+- 機密情報はGitHub Secretsで管理
+
+## 必須のGitHub Secrets
+- `GCP_SA_KEY`: GCPサービスアカウントキー（JSON形式）
+- プロジェクトID: technobrain-mendan
+
+## ワークフロートリガー
+```yaml
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:  # 手動実行を可能にする
+```
+
+## GCP認証パターン
+```yaml
+- name: Authenticate to Google Cloud
+  uses: google-github-actions/auth@v2
+  with:
+    credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+- name: Set up Cloud SDK
+  uses: google-github-actions/setup-gcloud@v2
+  with:
+    project_id: ${{ env.PROJECT_ID }}
+```
+
+## 環境変数の設定
+```yaml
+env:
+  PROJECT_ID: technobrain-mendan
+  REGION: asia-northeast1
+```
+
+## デプロイステップの標準パターン
+1. コードチェックアウト
+2. GCP認証
+3. Cloud SDK設定
+4. 必要に応じてDocker認証設定
+5. ビルド
+6. デプロイ
+7. デプロイ結果の確認
+
+## エラーハンドリング
+- 各ステップに適切な名前をつける
+- 失敗時の通知を設定
+- ロールバック戦略を検討
+
+## セキュリティチェックリスト
+- [ ] Secretsが適切に設定されている
+- [ ] ログに機密情報が出力されない
+- [ ] 必要最小限の権限でデプロイ
+- [ ] トークンやキーがハードコードされていない
+
+## パフォーマンス最適化
+- キャッシュを活用（actions/cache）
+- 並列実行可能なジョブは分離
+- 不要な依存関係のインストールを避ける
+
+## 参考リンク
+- GitHub Actions公式ドキュメント: https://docs.github.com/ja/actions
+- google-github-actions/auth: https://github.com/google-github-actions/auth
+- google-github-actions/setup-gcloud: https://github.com/google-github-actions/setup-gcloud

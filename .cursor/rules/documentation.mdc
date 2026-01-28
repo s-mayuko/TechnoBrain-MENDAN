@@ -1,0 +1,86 @@
+---
+description: "ドキュメント作成とメンテナンスの標準"
+globs:
+  - "**/*.md"
+  - "**/README.md"
+alwaysApply: false
+---
+
+# ドキュメント標準
+
+## Markdown記法
+- 見出しは # から始める（最上位は #）
+- コードブロックには言語指定を含める
+- リンクは説明的なテキストを使用
+- 箇条書きは - を使用（* は避ける）
+
+## README.md 必須セクション
+1. プロジェクト概要
+2. 前提条件/必要な環境
+3. セットアップ手順
+4. 使用方法
+5. 主要な設定ファイル
+6. トラブルシューティング
+7. ライセンス
+
+## コードブロック
+````markdown
+```bash
+# コマンドの説明
+gcloud config set project technobrain-mendan
+```
+````
+
+## プロジェクト固有のドキュメント構造
+- README.md: プロジェクト全体の概要
+- gcp-setup.md: GCP環境設定の詳細
+- GITHUB-SECRETS-SETUP.md: CI/CD設定の詳細
+
+## 更新タイミング
+- 新機能追加時
+- 設定変更時
+- トラブルシューティング情報の追加時
+- APIバージョンアップ時
+
+## スタイル
+- 簡潔かつ明確に記述
+- 技術的な正確性を優先
+- 手順は番号付きリストで明示
+- コマンドは実行可能な状態で記載
+
+## 多言語対応
+- 主要ドキュメントは日本語で記述
+- 技術用語は英語を併記
+- 国際的なプロジェクトの場合は英語版も用意
+
+## リンク管理
+- 内部リンクは相対パスを使用
+- 外部リンクは定期的に確認
+- 公式ドキュメントへのリンクを優先
+
+## @Docs 参照用リンク集
+### GCP公式ドキュメント
+- GCP概要: https://cloud.google.com/docs
+- App Engine: https://cloud.google.com/appengine/docs
+- Cloud Run: https://cloud.google.com/run/docs
+- Cloud Build: https://cloud.google.com/build/docs
+- IAM: https://cloud.google.com/iam/docs
+- gcloudコマンド: https://cloud.google.com/sdk/gcloud/reference
+
+### GitHub関連
+- GitHub Actions: https://docs.github.com/ja/actions
+- GitHub Secrets: https://docs.github.com/ja/actions/security-guides/encrypted-secrets
+- google-github-actions: https://github.com/google-github-actions
+
+### Node.js関連
+- Node.js v18: https://nodejs.org/docs/latest-v18.x/api/
+- npm: https://docs.npmjs.com/
+
+### Cursor関連
+- Cursor Rules: https://cursor.com/ja/docs/context/rules
+- Cursor Context: https://cursor.com/ja/docs/context
+
+## メンテナンス
+- 四半期ごとにドキュメントをレビュー
+- 古くなった情報は即座に更新
+- 変更履歴をGitで管理
