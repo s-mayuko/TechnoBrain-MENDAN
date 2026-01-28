@@ -1,0 +1,16 @@
+# Google App Engine 設定ファイル（必要な場合に使用）
+runtime: nodejs18
+
+# 環境変数の設定
+env_variables:
+  PROJECT_ID: "technobrain-mendan"
+
+# インスタンスクラス
+instance_class: F1
+
+# 自動スケーリング設定
+automatic_scaling:
+  min_idle_instances: 0
+  max_idle_instances: 1
+  min_pending_latency: automatic
+  max_pending_latency: automatic
