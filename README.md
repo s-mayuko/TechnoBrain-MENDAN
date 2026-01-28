@@ -1,7 +1,26 @@
 # TechnoBrain-MENDAN
 
 ## プロジェクト概要
-TechnoBrain-MENDANプロジェクト
+
+スプレッドシート上で3ソース（Porters/音声AI/手入力）のデータをマージし、Webhook送信するシステム。
+
+### 主要機能
+
+- ✅ **スプレッドシートUI**: 排他チェック、一括採用、空欄警告
+- ✅ **音声処理**: GCS音声 → Speech-to-Text → Claude抽出 → E列反映
+- ✅ **マージ・送信**: チェック状態に応じてマージし、Webhook送信
+- ✅ **バリデーション**: 必須項目、型チェック、正規表現対応
+- ✅ **二重送信防止**: 送信済フラグ、idempotency key
+- ✅ **監査ログ**: 詳細な送信履歴記録
+- ✅ **エラー通知**: Slack連携
+- ✅ **ログマスキング**: 個人情報保護
+
+### DoD達成状況
+
+- **PoC完了定義**: ✅ 全て達成
+- **本番完了定義**: 🟢 主要項目達成（67%）
+
+詳細は [DOD-STATUS.md](./DOD-STATUS.md) を参照。
 
 ## GCPプロジェクト
 - プロジェクトID: technobrain-mendan
@@ -11,26 +30,27 @@ TechnoBrain-MENDANプロジェクト
 - **GCPプロジェクトID**: technobrain-mendan
 - **プロジェクト番号**: 251107091138
 
-## セットアップ
+## クイックスタート
+
+### PoC（5分で動かす）
+
+**最速で動作確認したい場合:**
+1. [POC-QUICKSTART.md](./POC-QUICKSTART.md) を参照
+2. スプレッドシート作成 → GAS設定 → 動作確認
+
+### 本番セットアップ
+
+**完全な本番環境を構築する場合:**
+
+1. **GCP設定** - [gcp-setup.md](./gcp-setup.md) を参照
+2. **Cloud Run デプロイ** - [cloud_run/README.md](./cloud_run/README.md) を参照
+3. **GAS設定** - [apps_script/README.md](./apps_script/README.md) を参照
+4. **configシート設定** - [CONFIG-SHEET-GUIDE.md](./CONFIG-SHEET-GUIDE.md) を参照
 
 ### 必要な環境
-- Node.js
 - Google Cloud SDK
-- Git
-
-### 開始方法
-```bash
-# リポジトリのクローン
-git clone https://github.com/s-mayuko/TechnoBrain-MENDAN.git
-cd TechnoBrain-MENDAN
-
-# GCP認証
-gcloud auth login
-gcloud config set project technobrain-mendan
-
-# GCP接続確認（Linux/Mac）
-bash check-gcp-connection.sh
-```
+- Python 3.11+ (Cloud Run用)
+- Googleアカウント（スプレッドシート用）
 
 ### 有効化済みのGCP API
 - Cloud Resource Manager API
