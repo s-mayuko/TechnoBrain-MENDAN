@@ -43,6 +43,9 @@ const DATA_START_ROW = 3;
 // ============================================
 // メニュー追加
 // ============================================
+// 注意: SetupDemoSheet.gs と統合する場合、この onOpen() はコメントアウトしてください
+// SetupDemoSheet.gs の統合版 onOpen() を使用してください
+/*
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('データ統合')
@@ -52,6 +55,7 @@ function onOpen() {
     .addItem('音声処理 → E列反映', 'processAudio')
     .addToUi();
 }
+*/
 
 // ============================================
 // 排他制御（onEdit）
@@ -124,6 +128,21 @@ function handleBulkCheck(sheet, col, value) {
   const values = sheet.getRange(DATA_START_ROW, targetValCol, numRows, 1).getValues();
   const checkValues = values.map(row => [row[0] !== '' && row[0] !== null]);
   sheet.getRange(DATA_START_ROW, targetCheckCol, numRows, 1).setValues(checkValues);
+  
+  // H列（採用ソース）を一括更新
+  let source = '';
+  if (col === BULK_CHECK_COLS.PORTERS) {
+    source = 'porters';
+  } else if (col === BULK_CHECK_COLS.AUDIO) {
+    source = 'audio';
+  } else if (col === BULK_CHECK_COLS.MANUAL) {
+    source = 'manual';
+  }
+  
+  if (source) {
+    const sourceValues = checkValues.map(row => [row[0] ? source : '']);
+    sheet.getRange(DATA_START_ROW, COL.SOURCE, numRows, 1).setValues(sourceValues);
+  }
 }
 
 /**
@@ -141,6 +160,28 @@ function handleRowExclusive(sheet, row, col, value) {
       sheet.getRange(row, c).setValue(false);
     }
   });
+  
+  // H列（採用ソース）を自動更新
+  updateSourceColumn(sheet, row, col);
+}
+
+/**
+ * H列（採用ソース）を自動更新
+ */
+function updateSourceColumn(sheet, row, checkedCol) {
+  let source = '';
+  
+  if (checkedCol === COL.PORTERS_CHECK) {
+    source = 'porters';
+  } else if (checkedCol === COL.AUDIO_CHECK) {
+    source = 'audio';
+  } else if (checkedCol === COL.MANUAL_CHECK) {
+    source = 'manual';
+  }
+  
+  if (source) {
+    sheet.getRange(row, COL.SOURCE).setValue(source);
+  }
 }
 
 // ============================================
